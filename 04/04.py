@@ -70,9 +70,50 @@ class Input:
                 occurrences.append((x,y))
         return occurrences
 
+    def count_global_mas_occurrences(self):
+        occurrences = []
+        for y in range(1,self.width-1):
+            for x in range(1,self.height-1):
+                if self.is_char(x, y, 'A'):
+                    occurrences += self.count_local_mas_occurrences(x, y)
+        return occurrences
+
+    def count_local_mas_occurrences(self, x, y):
+        occurrences = []
+        found_one = False
+        # check diagonal NE
+        if self.is_char(x-1, y+1, 'M') and self.is_char(x+1, y-1, 'S'):
+            #print(f"diagonal NE in ({x},{y})")
+            if found_one:
+                occurrences.append((x,y))
+            else:
+                found_one = True
+        # check diagonal SE
+        if self.is_char(x-1, y-1, 'M') and self.is_char(x+1, y+1, 'S'):
+            #print(f"diagonal SE in ({x},{y})")
+            if found_one:
+                occurrences.append((x,y))
+            else:
+                found_one = True
+        # check diagonal SW
+        if self.is_char(x+1, y-1, 'M') and self.is_char(x-1, y+1, 'S'):
+            #print(f"diagonal SW in ({x},{y})")
+            if found_one:
+                occurrences.append((x,y))
+            else:
+                found_one = True
+        # check diagonal NW
+        if self.is_char(x+1, y+1, 'M') and self.is_char(x-1, y-1, 'S'):
+            #print(f"diagonal NW in ({x},{y})")
+            if found_one:
+                occurrences.append((x,y))
+            else:
+                found_one = True
+        return occurrences
+
 def main():
     input = Input(INPUT_FILE)
-    occurrences = input.count_global_xmas_occurrences()
+    occurrences = input.count_global_mas_occurrences()
     print(occurrences)
     print(len(occurrences))
 
