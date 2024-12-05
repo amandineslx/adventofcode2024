@@ -1,7 +1,7 @@
 INPUT_FILE = "04-input.txt"
 
 class Input:
-    def __init__(self, input_file):
+    def __init__(self):
         self.input = []
         with open(INPUT_FILE, 'r') as f:
             for line in f.readlines():
