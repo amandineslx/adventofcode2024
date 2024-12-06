@@ -1,13 +1,16 @@
-INPUT_FILE = "06-input_test.txt"
+INPUT_FILE = "06-input.txt"
 
 class OutOfBoundException(Exception):
+    pass
+
+class LoopException(Exception):
     pass
 
 class Square:
     def __init__(self, occupied, visited):
         self.occupied = occupied
         self.visited = visited
-        self.directions = set()
+        self.directions = []
 
 class Warehouse:
     def __init__(self):
@@ -70,9 +73,12 @@ class Warehouse:
     def update_position(self, x, y):
         self.current_position = (x, y)
         current_square = self.get_square(self.current_position[0], self.current_position[1])
+        if self.current_direction in current_square.directions:
+            raise LoopException()
         if not current_square.visited:
             self.visited_positions.append((x, y))
             current_square.visited = True
+            current_square.directions.append(self.current_direction)
 
     def count_visited_squares(self):
         try:
@@ -99,5 +105,16 @@ class Warehouse:
                     l += "."
             print(l)
 
+    def count_loop_obstacles(self):
+        visited_positions = self.count_visited_squares()
+        for position in self.visited_positions[1:]:
+            warehouse = Warehouse()
+            warehouse.get_square(position[0], position[1]).occupied = True
+            try:
+                warehouse.count_visited_squares()
+            except LoopException:
+                self.loop_obstacles.append((position[0], position[1]))
+        print(len(self.loop_obstacles))
+
 warehouse = Warehouse()
-warehouse.count_visited_squares()
+warehouse.count_loop_obstacles()
