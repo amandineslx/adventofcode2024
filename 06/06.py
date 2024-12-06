@@ -1,4 +1,4 @@
-INPUT_FILE = "06-input.txt"
+INPUT_FILE = "06-input_test.txt"
 
 class OutOfBoundException(Exception):
     pass
@@ -7,6 +7,7 @@ class Square:
     def __init__(self, occupied, visited):
         self.occupied = occupied
         self.visited = visited
+        self.directions = set()
 
 class Warehouse:
     def __init__(self):
@@ -30,7 +31,8 @@ class Warehouse:
                 y += 1
         self.height = len(self.map)
         self.width = len(self.map[0])
-        self.counter = 1
+        self.visited_positions = [(self.current_position[0], self.current_position[1])]
+        self.loop_obstacles = []
 
     def get_square(self, x, y):
         return self.map[y][x]
@@ -69,7 +71,7 @@ class Warehouse:
         self.current_position = (x, y)
         current_square = self.get_square(self.current_position[0], self.current_position[1])
         if not current_square.visited:
-            self.counter += 1
+            self.visited_positions.append((x, y))
             current_square.visited = True
 
     def count_visited_squares(self):
@@ -82,7 +84,8 @@ class Warehouse:
                     self.update_position(next_position[0], next_position[1])
         except OutOfBoundException:
             #self.print()
-            print(self.counter)
+            #print(self.visited_positions)
+            print(len(self.visited_positions))
 
     def print(self):
         for line in self.map:
